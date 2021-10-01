@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    PENDENTE("Pendente"),
-    EM_PROCESSAMENTO("Em_processamento"),
-    APROVADA("Aprovada"),
-    COM_ERRO("Com_erro"),
-    CANCELADA("Cancelada");
+    PENDENTE("PENDENTE"),
+    EM_PROCESSAMENTO("EM_PROCESSAMENTO"),
+    APROVADA("APROVADA"),
+    COM_ERRO("COM_ERRO"),
+    CANCELADA("CANCELADA");
 
     private String status;
 
