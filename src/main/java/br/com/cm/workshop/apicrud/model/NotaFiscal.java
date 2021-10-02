@@ -24,10 +24,10 @@ public class NotaFiscal implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "O nome do cliente não pode ser vazio")
     private String nomeCliente;
 
-    @NotEmpty
+    @NotEmpty(message = "O endereço do cliente não pode ser vazio")
     private String endereco;
 
     private String telefone;

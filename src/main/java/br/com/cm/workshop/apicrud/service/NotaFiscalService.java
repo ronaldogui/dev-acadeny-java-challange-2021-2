@@ -1,16 +1,13 @@
 package br.com.cm.workshop.apicrud.service;
 
 import br.com.cm.workshop.apicrud.enums.Status;
+import br.com.cm.workshop.apicrud.model.Itens;
 import br.com.cm.workshop.apicrud.model.NotaFiscal;
 import br.com.cm.workshop.apicrud.repository.NotaFiscalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
-
 import javax.persistence.EntityNotFoundException;
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,8 +17,7 @@ public class NotaFiscalService {
     private NotaFiscalRepository notaFiscalRepository;
 
     public NotaFiscal criaNotaFiscal(NotaFiscal notaFiscal) {
-        notaFiscal.setStatus(Status.PENDENTE);
-        return notaFiscalRepository.saveAndFlush(notaFiscal);
+        return notaFiscalRepository.saveAndFlush(aplicaRegrasDeNegociosNotaFiscal(notaFiscal));
     }
 
     public List<NotaFiscal> listaTodasNotasFiscais() {
@@ -38,29 +34,11 @@ public class NotaFiscalService {
     public NotaFiscal alteraNotaFiscal(Long id, NotaFiscal notaFiscal) {
         if (notaFiscalRepository.existsById(id)) {
             if (id.equals(notaFiscal.getId()))
-                return notaFiscalRepository.saveAndFlush(notaFiscal);
+                return notaFiscalRepository.saveAndFlush(aplicaRegrasDeNegociosNotaFiscal(notaFiscal));
             else
                 throw new UnsupportedOperationException("Identificação informada é diferente da identificação da nota fiscal.");
         } else
             throw new EntityNotFoundException("Nota fiscal não encontrada.");
-    }
-
-    public NotaFiscal alteraStatusDeNotaFiscal(Long id, Map<Object, Object> campos) {
-        if (notaFiscalRepository.existsById(id)) {
-            Optional<NotaFiscal> optional = notaFiscalRepository.findById(id);
-            if (optional.isPresent()) {
-                NotaFiscal notaFiscal = optional.get();
-                campos.forEach((k, v) -> {
-                    Field field = ReflectionUtils.findField(NotaFiscal.class, (String) k);
-                    field.setAccessible(true);
-                    if(regrasStatus(notaFiscal,v.toString()))
-                        ReflectionUtils.setField(field, notaFiscal, verificaStatus(v.toString()));
-                });
-                return notaFiscalRepository.saveAndFlush(notaFiscal);
-            } else
-                throw new EntityNotFoundException("A nota fiscal com a identificação informada não foi encontrada ! ");
-        } else
-            throw new EntityNotFoundException("A nota fiscal com a identificação informada não existe ! ");
     }
 
     public void deletaNotaFiscal(Long id) {
@@ -70,52 +48,30 @@ public class NotaFiscalService {
         notaFiscalRepository.deleteById(id);
     }
 
-    public Status verificaStatus(String status) {
-        Status statusAtualizado;
-        switch (status) {
-            case "PENDENTE":
-                statusAtualizado = Status.PENDENTE;
-                break;
-            case "EM_PROCESSAMENTO":
-                statusAtualizado = Status.EM_PROCESSAMENTO;
-                break;
-            case "APROVADA":
-                statusAtualizado = Status.APROVADA;
-                break;
-            case "COM_ERRO":
-                statusAtualizado = Status.COM_ERRO;
-                break;
-            case "CANCELADA":
-                statusAtualizado = Status.CANCELADA;
-                break;
-            default:
-                throw new UnsupportedOperationException("Esse status não existe");
+    public NotaFiscal aplicaRegrasDeNegociosNotaFiscal(NotaFiscal notaFiscal){
+        Double valorTotalProdutos = 0.0 ;
+        Double valorTotal = 0.0 ;
+        if(notaFiscal.getStatus() == null || notaFiscal.getStatus().equals(Status.PENDENTE))
+            notaFiscal.setStatus(Status.PENDENTE);
+        else
+            throw new UnsupportedOperationException("Por favor o valor inicial de status da sua nota precisa ser 'PENDENTE', não é preciso inserir se preferir , já fazemos isso por você ! ");
+        for (Itens item:notaFiscal.getItens()) {
+            if(item.getValorTotal() == null || item.getValorTotal().equals(0.0))
+                item.setValorTotal(item.getPrecoUnitario()*item.getQuantidade());
+            else
+                throw new UnsupportedOperationException("Por favor deixe o valor total do seu item = 0.0 para que possamos fazer o calculo do real valor");
+            valorTotalProdutos += item.getValorTotal();
+            valorTotal +=item.getValorTotal();
         }
-        return statusAtualizado;
+        if(notaFiscal.getValorTotalProdutos() == null || notaFiscal.getValorTotalProdutos().equals(0.0))
+            notaFiscal.setValorTotalProdutos(valorTotalProdutos);
+        else
+            throw new UnsupportedOperationException("Por favor deixe o valor total de Produtos = 0.0 para que possamos fazer o calculo do real valor");
+        if(notaFiscal.getValorTotal() == null || notaFiscal.getValorTotal().equals(0.0))
+            notaFiscal.setValorTotal(valorTotal+ notaFiscal.getFrete());
+        else
+            throw new UnsupportedOperationException("Por favor deixe o valor total da sua nota fiscal = 0.0 para que possamos fazer o calculo do real valor");
+        return notaFiscal;
     }
-
-    public Boolean regrasStatus(NotaFiscal notaFiscal, String statusNovo) {
-
-        Boolean retorno = false;
-
-        if (statusNovo.equals("CANCELADA") && (notaFiscal.getStatus().equals(Status.EM_PROCESSAMENTO) || notaFiscal.getStatus().equals(Status.CANCELADA)))
-            throw new UnsupportedOperationException("Você não pode alterar o status para 'CANCELADA' pois o status atual está em 'EM_PROCESSAMENTO' ou 'CANCELADA' ");
-        else if (statusNovo.equals("CANCELADA") && (notaFiscal.getStatus().equals(Status.EM_PROCESSAMENTO) || notaFiscal.getStatus().equals(Status.CANCELADA))){
-            retorno = true;
-        }else if (statusNovo.equals("EM_PROCESSAMENTO") && (notaFiscal.getStatus().equals(Status.PENDENTE) || notaFiscal.getStatus().equals(Status.COM_ERRO))) {
-            retorno = true;
-        } else if (statusNovo.equals("EM_PROCESSAMENTO") && !(notaFiscal.getStatus().equals(Status.PENDENTE) || notaFiscal.getStatus().equals(Status.COM_ERRO)))
-            throw new UnsupportedOperationException("Você não pode alterar o status para 'EM_PROCESSAMENTO' pois o status atual está em 'CANCELADA' ou 'APROVADA' ");
-        if (statusNovo.equals("APROVADA") && notaFiscal.getStatus().equals(Status.EM_PROCESSAMENTO)) {
-            retorno = true;
-        }else  if (statusNovo.equals("APROVADA") && !(notaFiscal.getStatus().equals(Status.EM_PROCESSAMENTO))){
-            throw new UnsupportedOperationException("Você não pode alterar o status para 'APROVADA' pois o status atual não está em 'EM_PROCESSAMENTO' ");
-        }else {
-            retorno = true;
-        }
-
-        return retorno;
-    }
-
 
 }

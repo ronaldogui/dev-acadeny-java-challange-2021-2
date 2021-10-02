@@ -1,9 +1,7 @@
 package br.com.cm.workshop.apicrud.controller;
 
-import br.com.cm.workshop.apicrud.enums.Status;
 import br.com.cm.workshop.apicrud.model.NotaFiscal;
 import br.com.cm.workshop.apicrud.service.NotaFiscalService;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -44,14 +42,8 @@ public class NotaFiscalController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public NotaFiscal alteraNotaFiscal(@PathVariable Long id,@RequestBody NotaFiscal notaFiscal){
+    public NotaFiscal alteraNotaFiscal(@PathVariable Long id,@Valid @RequestBody NotaFiscal notaFiscal){
         return notaFiscalService.alteraNotaFiscal(id,notaFiscal);
-    }
-
-    @PatchMapping("/{id}/status")
-    @ResponseStatus(code = HttpStatus.OK)
-    public NotaFiscal alteraStatusNotaFiscal(@RequestBody Map<Object,Object> campos,@PathVariable Long id){
-        return notaFiscalService.alteraStatusDeNotaFiscal(id,campos);
     }
 
     @DeleteMapping("/{id}")
