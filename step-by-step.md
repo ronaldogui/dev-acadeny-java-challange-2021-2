@@ -15,6 +15,13 @@ Quando o projeto estiver devidamente instalado é possivel ver a documentação 
 - Com o projeto já rodando , abaixo há uma serie de dicas para que se utilize a aplicação da melhor maneira.
 
 
+- Utilize um APIClient de sua preferencia , para navegar nos endpoints.  
+
+
+
+
+
+
 ## ENDPOINT - NotaFiscal
 
 ## Como Inserir Uma Nota Fiscal (Metodo POST).
