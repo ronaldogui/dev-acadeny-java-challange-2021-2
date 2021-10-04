@@ -269,7 +269,7 @@ Exemplo De Retorno:
 ```
 
 
-## Endpoint NotaFiscal – Listar Uma Nota Fiscal especifica (Metodo GET)
+## Endpoint NotaFiscal – Listar Uma Nota Fiscal Especifica (Metodo GET)
 
 A url para utilizar deste método é : http://localhost:{porta}/api/v1/notas-fiscais/{id}
 

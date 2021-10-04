@@ -70,33 +70,6 @@ public class StatusControllerTest {
                         .as(NotaFiscal.class);
     }
 
-    @Test
-    public void naoDeveriaAtualizarStatusEmProcessamentoQuandoStatusForDiferenteDePendenteOuComErro() throws JsonProcessingException {
-        NotaFiscal notaFiscal =
-                given()
-                        .spec(requestSpecification)
-                        .body(objectMapper.writeValueAsString(dadoUmaNotaFiscalPadrao()))
-                        .when()
-                        .post()
-                        .then()
-                        .statusCode(HttpStatus.SC_CREATED)
-                        .extract()
-                        .as(NotaFiscal.class);
-
-        notaFiscal.setStatus(Status.APROVADA);
-
-        NotaFiscal notaFiscalComStatusAtualizado =
-                given()
-                        .spec(requestSpecification)
-                        .body("{ \"status\" : \""+dadoStatusCancelada()+"\"}")
-                        .when()
-                        .patch("{id}/status", notaFiscal.getId())
-                        .then()
-                        .statusCode(HttpStatus.SC_UNPROCESSABLE_ENTITY)
-                        .extract()
-                        .as(NotaFiscal.class);
-    }
-
 
     private NotaFiscal dadoUmaNotaFiscalPadrao() {
         NotaFiscal notaFiscal = new NotaFiscal();
@@ -117,17 +90,6 @@ public class StatusControllerTest {
 
     private Status dadoUmStatusComErro() {
         return Status.COM_ERRO;
-    }
-
-    private Status dadoStatusAprovada() {
-        return Status.APROVADA;
-    }
-
-    private Status dadoStatusCancelada() {
-        return Status.CANCELADA;
-    }
-    private Status dadoStatusEmProcessamento() {
-        return Status.EM_PROCESSAMENTO;
     }
 
 
