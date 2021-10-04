@@ -2,9 +2,22 @@
 
 O projeto consiste em uma API que tem dois enpoints Nota Fiscal e Mudança de Status Da Nota Fiscal , onde no enpoint de nota fiscal teremos os metodos POST,GET,PUT E DELETE e em Mudança de Status teremos o metodo PATCH.
 
-## ENDPOINT - NotaFiscal
+Quando o projeto estiver devidamente instalado é possivel ver a documentação do neste link : http://localhost:8080/swagger-ui/index.html?configUrl=/api-docs/swagger-config#/
 
-## Como Inserir Uma Nota Fiscal (Metodo POST).
+## Instalação do projeto:
+
+- Primeiro faça o download do projeto ou utilize o git clone neste link https://github.com/ronaldogui/dev-acadeny-java-challange-2021-2;
+
+
+- Depois abra em uma IDE , baixe as dependencias do projeto , e rode a aplicação através da classe ApiCrudApplication;
+
+
+- Com o projeto já rodando , abaixo há uma serie de dicas para que se utilize a aplicação da melhor maneira.
+
+
+##ENDPOINT - NotaFiscal
+
+##Como Inserir Uma Nota Fiscal (Metodo POST).
 
 A url para utilizar deste método é : http://localhost:{porta}/api/v1/notas-fiscais
 
