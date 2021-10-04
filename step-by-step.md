@@ -8,9 +8,36 @@ O projeto consiste em uma API que tem dois enpoints Nota Fiscal e Mudança de St
 
 A url para utilizar deste método é : http://localhost:{porta}/api/v1/notas-fiscais
 
-TEMOS 5 MANEIRAS DE CRIAR UMA NOTA FISCAL SÃO ELAS : 
+TEMOS 6 MANEIRAS DE CRIAR UMA NOTA FISCAL SÃO ELAS : 
 
-###1. Com o valorTotal da nota fiscal corretamente, seguindo as regras de negocios : O valor total da Nota Fiscal deve ser a soma do valor total dos produtos e frete;
+##1.Com o status da nota fiscal corretamente, seguindo as regras de negocios : Todo nova nota fiscal terá que ter o status inicial PENDENTE;
+```json
+{
+"nomeCliente":"JOSE FRANCISCO",
+"endereco":"Rua A, 500",
+"telefone":"8532795578",
+"frete":2.50, 
+"status": "PENDENTE",
+"itens": 
+    [{
+        "descricao": "Refri",
+        "precoUnitario": 5.5,
+        "quantidade": 1
+   },
+   {
+        "descricao": "Coxinha",
+        "precoUnitario": 3.00,
+        "quantidade": 1
+   },
+   {
+        "descricao": "Batatinha",
+        "precoUnitario": 5.00,
+        "quantidade": 1
+   }]
+}
+```
+
+##2.Com o valorTotal da nota fiscal corretamente, seguindo as regras de negocios : O valor total da Nota Fiscal deve ser a soma do valor total dos produtos e frete;
 ```json
 {
 "nomeCliente":"JOSE FRANCISCO",
@@ -36,7 +63,7 @@ TEMOS 5 MANEIRAS DE CRIAR UMA NOTA FISCAL SÃO ELAS :
    }]
 }
 ```
-###2. Com o valorTotalProdutos da nota fiscal corretamente , seguindo as regras de negocios : O valor total dos produtos na Nota Fiscal deve ser o somátorios valor total dos Itens;
+##3.Com o valorTotalProdutos da nota fiscal corretamente , seguindo as regras de negocios : O valor total dos produtos na Nota Fiscal deve ser o somátorios valor total dos Itens;
 
 ```json
 {
@@ -64,7 +91,7 @@ TEMOS 5 MANEIRAS DE CRIAR UMA NOTA FISCAL SÃO ELAS :
 }
 ```
 
-###3. Com o valorTotal dos Itens corretamente , seguindo as regras de negocios : O valor total do Item deve ser multiplicação do preco unitário pela quantidade;
+##4.Com o valorTotal dos Itens corretamente , seguindo as regras de negocios : O valor total do Item deve ser multiplicação do preco unitário pela quantidade;
 
 ```json
 {
@@ -93,7 +120,7 @@ TEMOS 5 MANEIRAS DE CRIAR UMA NOTA FISCAL SÃO ELAS :
    }]
 }
 ```
-###4.Com todos os campos inseridos corretamente , seguindo as regras de negocios e validações;
+##5.Com todos os campos inseridos corretamente , seguindo as regras de negocios e validações;
 
 ```json
 {
@@ -124,7 +151,7 @@ TEMOS 5 MANEIRAS DE CRIAR UMA NOTA FISCAL SÃO ELAS :
     }]
 }
 ```
-###5. Você pode preferir que o sistema ja insira os campos (ValorTotal da notaFiscal,ValorTotalProdutos e valorTotal dos itens) devidamente formatados segundo as regras de negocios;
+##6.Você pode preferir que o sistema ja insira os campos (ValorTotal da notaFiscal,ValorTotalProdutos e valorTotal dos itens) devidamente formatados segundo as regras de negocios;
 ```json
 {
   "nomeCliente":"JOSE FRANCISCO",
@@ -151,7 +178,7 @@ TEMOS 5 MANEIRAS DE CRIAR UMA NOTA FISCAL SÃO ELAS :
 ```
 
 
-## Endpoint NotaFiscal – Listar Todas As Notas Fiscais (Metodo GET)
+##Endpoint NotaFiscal – Listar Todas As Notas Fiscais (Metodo GET)
 
 A url para utilizar deste método é : http://localhost:{porta}/api/v1/notas-fiscais
 
@@ -229,7 +256,7 @@ Exemplo De Retorno:
 ```
 
 
-## Endpoint NotaFiscal – Listar Todas As Notas Fiscais (Metodo GET)
+##Endpoint NotaFiscal – Listar Todas As Notas Fiscais (Metodo GET)
 
 A url para utilizar deste método é : http://localhost:{porta}/api/v1/notas-fiscais/{id}
 
@@ -275,7 +302,7 @@ Exemplo de retorno , neste caso o usuario informou o id = 1:
 ]
 ```
 
-## Endpoint NotaFiscal – Atualizar Nota Fical (Metodo PUT)
+##Endpoint NotaFiscal – Atualizar Nota Fical (Metodo PUT)
 
 A url para utilizar deste método é : http://localhost:{porta}/api/v1/notas-fiscais/{id}
 
@@ -286,7 +313,7 @@ Exemplo de atualização:
 
 url = http://localhost:8080/api/v1/notas-fiscais/1
 
-### Exemplo de nota fiscal antes de ser atualizada
+###Exemplo de nota fiscal antes de ser atualizada
 ```json
 {
 "id":"1",
@@ -349,7 +376,7 @@ url = http://localhost:8080/api/v1/notas-fiscais/1
    }]
 }
 ```
-### Retorno Esperado (STATUS 200 OK)
+###Retorno Esperado (STATUS 200 OK)
 
 ```log
  {
@@ -387,7 +414,7 @@ url = http://localhost:8080/api/v1/notas-fiscais/1
 }
 ```
 
-## Endpoint NotaFiscal – Excluir Uma Nota Fiscal (Metodo DELETE)
+##Endpoint NotaFiscal – Excluir Uma Nota Fiscal (Metodo DELETE)
 
 A url para utilizar deste método é : http://localhost:{porta}/api/v1/notas-fiscais/{id}
 
@@ -418,7 +445,7 @@ O corpo da requisição fica assim :
 
 Neste projeto foram feitas validações para não deixar que as regras de negocios fossem quebradas , essas são as regras de negócios;
 
-### Regras de Negócio da notaFiscal
+##Regras de Negócio da notaFiscal
 
 - Todo nova nota fiscal terá que ter o status inicial **PENDENTE**;
 - O **valor total** do Item deve ser multiplicação do **preco unitário** pela **quantidade**;
@@ -432,10 +459,10 @@ O endpoint não deve permitir:
 - Item sem valor;
 - Item sem nome.
 
-### Regras de Negócio da Mudança de Status
+##Regras de Negócio da Mudança de Status
 
 - **Não permitir** alterar o status para CANCELADO caso o status atual seja EM_PROCESSAMENTO ou CANCELADO;
 - **Permitir** alterar o status para EM_PROCESSAMENTO caso o status atual seja PENDENTE ou COM_ERRO;
 - **Permitir** alterar o status para APROVADA caso o status atual seja EM_PROCESSAMENTO.
 
-##Com essa informação fique a vontade para testar as regras :)
+##Com essas informações fique a vontade para testar as regras :)
