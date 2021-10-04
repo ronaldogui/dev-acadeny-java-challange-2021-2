@@ -2,6 +2,8 @@ package br.com.cm.workshop.apicrud.controller;
 
 import br.com.cm.workshop.apicrud.model.NotaFiscal;
 import br.com.cm.workshop.apicrud.service.StatusService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/notas-fiscais/{id}/status")
+@Tag(name = "Status Da Nota Fiscal")
 public class StatusController {
 
     @Autowired
