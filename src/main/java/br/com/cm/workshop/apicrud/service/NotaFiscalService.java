@@ -22,6 +22,8 @@ public class NotaFiscalService {
     }
 
     public List<NotaFiscal> listaTodasNotasFiscais() {
+        if (notaFiscalRepository.findAll().isEmpty())
+            throw new EntityNotFoundException("Nenhuma Nota Fiscal Foi Encontrada ! ");
         return notaFiscalRepository.findAll();
     }
 

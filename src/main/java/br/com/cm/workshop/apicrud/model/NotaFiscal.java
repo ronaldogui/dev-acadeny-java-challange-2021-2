@@ -48,5 +48,8 @@ public class NotaFiscal implements Serializable {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Itens> itens;
 
+    public NotaFiscal(Status status){
+        this.status = status;
+    }
 
 }

@@ -1,6 +1,7 @@
 package br.com.cm.workshop.apicrud.enums;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 public enum Status {
@@ -15,5 +16,6 @@ public enum Status {
     Status(String status){
         this.status = status;
     }
+
 
 }
